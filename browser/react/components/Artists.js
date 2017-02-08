@@ -3,10 +3,11 @@
  */
 
 import React from 'react';
+import {Link} from 'react-router';
 
 class Artists extends React.Component {
-    constructor() {
-        props();
+    constructor(props) {
+        super(props);
     }
 
 
@@ -19,14 +20,14 @@ class Artists extends React.Component {
                         this.props.artists.map(artist => {
                             return (
                                 <div className="list-group-item" key={artist.id}>
-                                    <Link to={/**tbd!**/}>{ artist.name }</Link>
+                                    <Link to={`/artist/${artist.id}`}>{ artist.name }</Link>
                                 </div>
-                            )
+                            );
                         })
                     }
                 </div>
             </div>
-        )
+        );
 
 
 

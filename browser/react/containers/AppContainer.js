@@ -93,10 +93,23 @@ export default class AppContainer extends Component {
   }
 
   selectArtist(artistId) {
-    axios.get(`/api/artists/${albumId}`)
+    axios.get(`/api/artists/${artistId}`)
+    .then(res => res.data)
+    .then(artist => {
+      this.setState({
+        selectedArtist: artist
+      });
+    });
+  }
 
-
-
+  selectAllArtist() {
+    axios.get('/api/artists')
+    .then(res => res.data)
+    .then(artist => {
+      this.setState({
+        artist: artist
+      });
+    });
   }
 
   selectAlbum (albumId) {
@@ -140,7 +153,11 @@ export default class AppContainer extends Component {
 
           // Albums (plural) component's props
           albums: this.state.albums,
-          selectAlbum: this.selectAlbum // note that this.selectAlbum is a method, and this.state.selectedAlbum is the chosen album
+          selectAlbum: this.selectAlbum, // note that this.selectAlbum is a method, and this.state.selectedAlbum is the chosen album
+
+          //Artists props passed down
+          artist: this.state.artist,
+          selectedArtist: this.state.selectedArtist
            })
            : null
         }
