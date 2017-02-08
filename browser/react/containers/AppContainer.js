@@ -23,6 +23,7 @@ export default class AppContainer extends Component {
     this.prev = this.prev.bind(this);
     this.selectAlbum = this.selectAlbum.bind(this);
     this.deselectAlbum = this.deselectAlbum.bind(this);
+    this.onLoad = this.onLoad.bind(this);
   }
 
   componentDidMount () {
@@ -37,6 +38,7 @@ export default class AppContainer extends Component {
   }
 
   onLoad (albums) {
+    // console.log(albums);
     this.setState({
       albums: albums
     });
@@ -90,12 +92,25 @@ export default class AppContainer extends Component {
     this.setState({ progress: progress });
   }
 
+  selectArtist(artistId) {
+    axios.get(`/api/artists/${albumId}`)
+
+
+
+  }
+
   selectAlbum (albumId) {
     axios.get(`/api/albums/${albumId}`)
       .then(res => res.data)
-      .then(album => this.setState({
-        selectedAlbum: convertAlbum(album)
-      }));
+      .then(album => {
+          console.log("in selectAlbum");
+          console.log(album);
+
+          this.setState({
+          selectedAlbum: convertAlbum(album)
+        })
+
+      });
   }
 
   deselectAlbum () {
@@ -103,12 +118,16 @@ export default class AppContainer extends Component {
   }
 
   render () {
+    //console.log("in render state -------------->");
+    //console.log(this.state.selectedAlbum);
     return (
       <div id="main" className="container-fluid">
         <div className="col-xs-2">
           <Sidebar deselectAlbum={this.deselectAlbum} />
         </div>
         <div className="col-xs-10">
+
+
         {
           this.props.children ?
            React.cloneElement(this.props.children, {
@@ -125,6 +144,7 @@ export default class AppContainer extends Component {
            })
            : null
         }
+
         </div>
         <Player
           currentSong={this.state.currentSong}
