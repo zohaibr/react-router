@@ -115,6 +115,26 @@ export default class AppContainer extends Component {
     });
   }
 
+  selectAllArtistAlbums() {
+    axios.get('/api/artists/:artistId/albums')
+    .then(res => res.data)
+    .then(artistAlbums => {
+      this.setState({
+        albums: artistAlbums
+      });
+    });
+  }
+
+  selectAllArtistSongs() {
+    axios.get('/api/artists/:artistId/songs')
+    .then(res => res.data)
+    .then(artistSongs => {
+      this.setState({
+        songs: artistSongs
+      });
+    });
+  }
+
   selectAlbum (albumId) {
     axios.get(`/api/albums/${albumId}`)
       .then(res => res.data)
@@ -124,7 +144,7 @@ export default class AppContainer extends Component {
 
           this.setState({
           selectedAlbum: convertAlbum(album)
-        })
+        });
 
       });
   }
@@ -153,6 +173,7 @@ export default class AppContainer extends Component {
           currentSong: this.state.currentSong,
           isPlaying: this.state.isPlaying,
           toggle: this.toggleOne,
+          songs: this.state.songs
 
           // Albums (plural) component's props
           albums: this.state.albums,
@@ -161,7 +182,7 @@ export default class AppContainer extends Component {
           //Artists props passed down
           artists: this.state.artist,
           selectedArtist: this.state.selectedArtist,
-          selectArtist: this.state.selectArtist,
+          selectArtist: this.selectArtist,
           selectAllArtist: this.state.selectAllArtist
            })
            : null
