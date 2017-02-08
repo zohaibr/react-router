@@ -10,20 +10,17 @@ class Artist extends React.Component {
   }
 
   componentDidMount() {
-    console.log("IN MOUNT");
-    console.log(this.props.routeParams.artistId);
     const selectArtist = this.props.selectArtist;
     const artistId = this.props.routeParams.artistId;
     selectArtist(artistId);
 
     const artists = this.props.selectedArtist;
-    console.log(artists);
 
   }
 
   render () {
-      console.log("this props albums");
-      console.log(this.props.albums);
+      // console.log("in artist render ->>>>>>>");
+      // console.log(this.props.toggle);
     return (
 
         <div>
@@ -39,7 +36,7 @@ class Artist extends React.Component {
                     songs={this.props.songs}
                     currentSong={this.props.currentSong}
                     isPlaying={this.props.isPlaying}
-                    toggleOne={this.props.toggleOne}
+                    toggleOne={this.props.toggle}
                 />
 
             </div>

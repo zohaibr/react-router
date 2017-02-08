@@ -9,7 +9,7 @@ import Album from '../components/Album';
 import Sidebar from '../components/Sidebar';
 import Player from '../components/Player';
 
-import { convertAlbum, convertAlbums, skip } from '../utils';
+import { convertAlbum, convertAlbums, skip, convertSong, convertSongs } from '../utils';
 
 export default class AppContainer extends Component {
 
@@ -59,6 +59,7 @@ export default class AppContainer extends Component {
   }
 
   load (currentSong, currentSongList) {
+
     AUDIO.src = currentSong.audioUrl;
     AUDIO.load();
     this.setState({
@@ -74,6 +75,8 @@ export default class AppContainer extends Component {
   }
 
   toggleOne (selectedSong, selectedSongList) {
+    convertSong(selectedSong);
+
     if (selectedSong.id !== this.state.currentSong.id)
       this.startSong(selectedSong, selectedSongList);
     else this.toggle();
@@ -101,10 +104,8 @@ export default class AppContainer extends Component {
     axios.get(`/api/artists/${artistId}/albums`)
         .then(res => res.data)
         .then(albums => {
-          console.log('albums ajax');
-          console.log(albums);
           this.setState({albums: convertAlbums(albums)})
-        })
+        }).catch((err) => console.log(err))
 
     //get artist id
     axios.get(`/api/artists/${artistId}`)
@@ -113,17 +114,16 @@ export default class AppContainer extends Component {
       this.setState({
         selectedArtist: artist
       });
-    });
+    }).catch((err) => console.log(err))
 
     //get all artist songs
     axios.get(`/api/artists/${artistId}/songs`)
         .then(res => res.data)
         .then(songs => {
-          console.log(songs);
           this.setState({
-            songs: songs
+            songs: convertSong(songs)
           });
-        });
+        }).catch((err) => console.log(err))
   }
 
   selectAllArtist() {
@@ -151,9 +151,6 @@ export default class AppContainer extends Component {
     axios.get(`/api/albums/${albumId}`)
       .then(res => res.data)
       .then(album => {
-          console.log("in selectAlbum");
-          console.log(album);
-
           this.setState({
           selectedAlbum: convertAlbum(album)
         });
@@ -166,9 +163,15 @@ export default class AppContainer extends Component {
   }
 
   render () {
-    //console.log("in render state -------------->");
+    // console.log("in render state of app container -------------->");
+    // console.log(this.toggleOne);
+
     //console.log(this.state.selectedAlbum);
+
+
+
     return (
+
       <div id="main" className="container-fluid">
         <div className="col-xs-2">
           <Sidebar deselectAlbum={this.deselectAlbum} />

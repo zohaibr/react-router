@@ -10,8 +10,6 @@ class Album extends React.Component {
   }
 
   componentDidMount() {
-    console.log("IN MOUNT");
-
       const album = this.props.album;
       const currentSong = this.props.currentSong;
       const isPlaying = this.props.isPlaying;
@@ -23,10 +21,6 @@ class Album extends React.Component {
   }
 
   render () {
-      console.log("in render album");
-      console.log(this.props);
-
-
     return(
         <div className="album">
           <div>
