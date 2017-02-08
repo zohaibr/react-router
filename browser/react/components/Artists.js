@@ -12,19 +12,20 @@ class Artists extends React.Component {
 
 
     render() {
+        const artists = this.props.artists;
+        console.log(artists);
         return (
             <div>
                 <h3>Artists</h3>
                 <div className="list-group">
-                    {
+                    { artists && artists ?
                         this.props.artists.map(artist => {
                             return (
                                 <div className="list-group-item" key={artist.id}>
-                                    <Link to={`/artist/${artist.id}`}>{ artist.name }</Link>
+                                    <Link to={`/artists/${artist.id}`}>{ artist.name }</Link>
                                 </div>
                             );
-                        })
-                    }
+                        }) : null }
                 </div>
             </div>
         );
