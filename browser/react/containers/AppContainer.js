@@ -24,6 +24,7 @@ export default class AppContainer extends Component {
     this.selectAlbum = this.selectAlbum.bind(this);
     this.deselectAlbum = this.deselectAlbum.bind(this);
     this.onLoad = this.onLoad.bind(this);
+    this.selectArtist = this.selectArtist.bind(this);
   }
 
   componentDidMount () {
@@ -96,6 +97,16 @@ export default class AppContainer extends Component {
   }
 
   selectArtist(artistId) {
+    //Get all artist albums
+    axios.get(`/api/artists/${artistId}/albums`)
+        .then(res => res.data)
+        .then(albums => {
+          console.log('albums ajax');
+          console.log(albums);
+          this.setState({albums: convertAlbums(albums)})
+        })
+
+    //get artist id
     axios.get(`/api/artists/${artistId}`)
     .then(res => res.data)
     .then(artist => {
@@ -103,6 +114,16 @@ export default class AppContainer extends Component {
         selectedArtist: artist
       });
     });
+
+    //get all artist songs
+    axios.get(`/api/artists/${artistId}/songs`)
+        .then(res => res.data)
+        .then(songs => {
+          console.log(songs);
+          this.setState({
+            songs: songs
+          });
+        });
   }
 
   selectAllArtist() {
@@ -115,15 +136,6 @@ export default class AppContainer extends Component {
     });
   }
 
-  selectAllArtistAlbums() {
-    axios.get('/api/artists/:artistId/albums')
-    .then(res => res.data)
-    .then(artistAlbums => {
-      this.setState({
-        albums: artistAlbums
-      });
-    });
-  }
 
   selectAllArtistSongs() {
     axios.get('/api/artists/:artistId/songs')
@@ -173,7 +185,7 @@ export default class AppContainer extends Component {
           currentSong: this.state.currentSong,
           isPlaying: this.state.isPlaying,
           toggle: this.toggleOne,
-          songs: this.state.songs
+          songs: this.state.songs, //also used for artists
 
           // Albums (plural) component's props
           albums: this.state.albums,
@@ -183,7 +195,7 @@ export default class AppContainer extends Component {
           artists: this.state.artist,
           selectedArtist: this.state.selectedArtist,
           selectArtist: this.selectArtist,
-          selectAllArtist: this.state.selectAllArtist
+          selectAllArtist: this.selectAllArtist,
            })
            : null
         }

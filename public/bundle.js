@@ -8882,7 +8882,6 @@ var Albums = function (_React$Component) {
         //     this.state = {albums: {}, selectAlbum: {}};
         // }
 
-
         value: function componentDidMount() {}
     }, {
         key: 'render',
@@ -12886,7 +12885,7 @@ module.exports = ReactPropTypesSecret;
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -12894,6 +12893,18 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _react = __webpack_require__(4);
 
 var _react2 = _interopRequireDefault(_react);
+
+var _Albums = __webpack_require__(75);
+
+var _Albums2 = _interopRequireDefault(_Albums);
+
+var _Album = __webpack_require__(74);
+
+var _Album2 = _interopRequireDefault(_Album);
+
+var _Songs = __webpack_require__(144);
+
+var _Songs2 = _interopRequireDefault(_Songs);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -12904,52 +12915,64 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Artist = function (_React$Component) {
-  _inherits(Artist, _React$Component);
+    _inherits(Artist, _React$Component);
 
-  function Artist(props) {
-    _classCallCheck(this, Artist);
+    function Artist(props) {
+        _classCallCheck(this, Artist);
 
-    return _possibleConstructorReturn(this, (Artist.__proto__ || Object.getPrototypeOf(Artist)).call(this, props));
-  }
-
-  _createClass(Artist, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      console.log("IN MOUNT");
-
-      var artists = this.props.artists;
-      var artistId = this.props.routeParams.artistId;
-      var selectArtist = this.props.selectAlbum;
-
-      selectArtist(artistId);
+        return _possibleConstructorReturn(this, (Artist.__proto__ || Object.getPrototypeOf(Artist)).call(this, props));
     }
-  }, {
-    key: "render",
-    value: function render() {
 
-      return _react2.default.createElement(
-        "div",
-        null,
-        _react2.default.createElement(
-          "h3",
-          null,
-          "ARTIST NAME"
-        ),
-        _react2.default.createElement(
-          "h4",
-          null,
-          "ALBUMS"
-        ),
-        _react2.default.createElement(
-          "h4",
-          null,
-          "SONGS"
-        )
-      );
-    }
-  }]);
+    _createClass(Artist, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            console.log("IN MOUNT");
+            console.log(this.props.routeParams.artistId);
+            var selectArtist = this.props.selectArtist;
+            var artistId = this.props.routeParams.artistId;
+            selectArtist(artistId);
 
-  return Artist;
+            var artists = this.props.selectedArtist;
+            console.log(artists);
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            console.log("this props albums");
+            console.log(this.props.albums);
+            return _react2.default.createElement(
+                'div',
+                null,
+                _react2.default.createElement(
+                    'h3',
+                    null,
+                    this.props.selectedArtist.name
+                ),
+                _react2.default.createElement(
+                    'div',
+                    null,
+                    _react2.default.createElement(_Albums2.default, { albums: this.props.albums })
+                ),
+                _react2.default.createElement(
+                    'div',
+                    null,
+                    _react2.default.createElement(
+                        'h4',
+                        null,
+                        'SONGS'
+                    ),
+                    _react2.default.createElement(_Songs2.default, {
+                        songs: this.props.songs,
+                        currentSong: this.props.currentSong,
+                        isPlaying: this.props.isPlaying,
+                        toggleOne: this.props.toggleOne
+                    })
+                )
+            );
+        }
+    }]);
+
+    return Artist;
 }(_react2.default.Component);
 
 exports.default = Artist;
@@ -13103,6 +13126,7 @@ var AppContainer = function (_Component) {
     _this.selectAlbum = _this.selectAlbum.bind(_this);
     _this.deselectAlbum = _this.deselectAlbum.bind(_this);
     _this.onLoad = _this.onLoad.bind(_this);
+    _this.selectArtist = _this.selectArtist.bind(_this);
     return _this;
   }
 
@@ -13194,11 +13218,31 @@ var AppContainer = function (_Component) {
     value: function selectArtist(artistId) {
       var _this3 = this;
 
+      //Get all artist albums
+      _axios2.default.get('/api/artists/' + artistId + '/albums').then(function (res) {
+        return res.data;
+      }).then(function (albums) {
+        console.log('albums ajax');
+        console.log(albums);
+        _this3.setState({ albums: (0, _utils.convertAlbums)(albums) });
+      });
+
+      //get artist id
       _axios2.default.get('/api/artists/' + artistId).then(function (res) {
         return res.data;
       }).then(function (artist) {
         _this3.setState({
           selectedArtist: artist
+        });
+      });
+
+      //get all artist songs
+      _axios2.default.get('/api/artists/' + artistId + '/songs').then(function (res) {
+        return res.data;
+      }).then(function (songs) {
+        console.log(songs);
+        _this3.setState({
+          songs: songs
         });
       });
     }
@@ -13216,9 +13260,22 @@ var AppContainer = function (_Component) {
       });
     }
   }, {
+    key: 'selectAllArtistSongs',
+    value: function selectAllArtistSongs() {
+      var _this5 = this;
+
+      _axios2.default.get('/api/artists/:artistId/songs').then(function (res) {
+        return res.data;
+      }).then(function (artistSongs) {
+        _this5.setState({
+          songs: artistSongs
+        });
+      });
+    }
+  }, {
     key: 'selectAlbum',
     value: function selectAlbum(albumId) {
-      var _this5 = this;
+      var _this6 = this;
 
       _axios2.default.get('/api/albums/' + albumId).then(function (res) {
         return res.data;
@@ -13226,7 +13283,7 @@ var AppContainer = function (_Component) {
         console.log("in selectAlbum");
         console.log(album);
 
-        _this5.setState({
+        _this6.setState({
           selectedAlbum: (0, _utils.convertAlbum)(album)
         });
       });
@@ -13259,6 +13316,7 @@ var AppContainer = function (_Component) {
             currentSong: this.state.currentSong,
             isPlaying: this.state.isPlaying,
             toggle: this.toggleOne,
+            songs: this.state.songs, //also used for artists
 
             // Albums (plural) component's props
             albums: this.state.albums,
@@ -13267,8 +13325,8 @@ var AppContainer = function (_Component) {
             //Artists props passed down
             artists: this.state.artist,
             selectedArtist: this.state.selectedArtist,
-            selectArtist: this.state.selectArtist,
-            selectAllArtist: this.state.selectAllArtist
+            selectArtist: this.selectArtist,
+            selectAllArtist: this.selectAllArtist
           }) : null
         ),
         _react2.default.createElement(_Player2.default, {
@@ -14394,7 +14452,8 @@ var initialState = {
   isPlaying: false,
   progress: 0,
   artist: [],
-  selectedArtist: {}
+  selectedArtist: {},
+  songs: []
 };
 
 exports.default = initialState;

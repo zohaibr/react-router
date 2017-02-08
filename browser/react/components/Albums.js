@@ -10,10 +10,7 @@ class Albums extends React.Component {
     //     this.state = {albums: {}, selectAlbum: {}};
     // }
 
-
-
     componentDidMount() {
-
     }
 
     render() {
